@@ -22,7 +22,8 @@ const famille = {
 
 class App extends Component {
   state = {
-    famille
+    famille,
+    isShow: false
   }
 
   handleClick = (num) => {
@@ -47,9 +48,26 @@ class App extends Component {
   this.setState({ famille })
   }
 
+  handleShowDescription = () => {
+    const isShow = !this.state.isShow //le ! permet de faire un toggle, il va passer isShow une fois true et une fois false
+    this.setState({ isShow })
+  }
+
   render () {
     const { titre, test } = this.props
-    const { famille } = this.state
+    const { famille, isShow } = this.state
+
+    let description = null
+    if (isShow){
+      description = 'Je suis la'
+    }
+
+    const liste = Object.keys(famille)
+      .map(membre =>(
+      <Membre age={famille[membre].age} nom={famille[membre].nom} />
+    ))
+      console.log(liste)
+
     return (
       <Fragment>
         <div className= 'App'>
@@ -57,10 +75,14 @@ class App extends Component {
           <h5>{test}</h5>
           <input value={famille.membre1.nom} onChange={this.handleChange} type="text" />
           <input value={famille.membre1.age} onChange={this.handleChangeAge} type="text" />
-          <Membre age={famille.membre1.age} nom={famille.membre1.nom} />
-          <Membre age={famille.membre2.age} nom={famille.membre2.nom} />
+          { liste }
           <Membre age={famille.membre3.age} nom={famille.membre3.nom}>
-            <strong>Je suis la.</strong>
+            {description}
+            <button onClick={this.handleShowDescription}>
+              {
+                isShow ? 'cacher' : 'montrer'
+              }
+            </button>
           </Membre>
           <Button vieillir={() => this.handleClick(2)} />
         </div>
