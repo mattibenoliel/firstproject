@@ -27,30 +27,36 @@ class App extends Component {
   }
 
   handleClick = (num) => {
-    const famille = { ... this.state.famille}
+    const famille = { ...this.state.famille}
     famille.membre1.age += num
     this.setState({ famille })
   }
 
-  handleChange = (event) => {
-  const famille = { ... this.state.famille}
+  handleChange = (event, id) => {
+  const famille = { ...this.state.famille}
   const nom = event.target.value
   console.log(nom)
-  famille.membre1.nom = nom
+  famille[id].nom = nom
   this.setState({ famille })
   }
 
-  handleChangeAge = (event) => {
-  const famille = { ... this.state.famille}
+  handleChangeAge = (event, id) => {
+  const famille = { ...this.state.famille}
   const age = event.target.value
   console.log(age)
-  famille.membre1.age = age
+  famille[id].age = age
   this.setState({ famille })
   }
 
   handleShowDescription = () => {
     const isShow = !this.state.isShow //le ! permet de faire un toggle, il va passer isShow une fois true et une fois false
     this.setState({ isShow })
+  }
+
+  cacherNom = (id) => {
+  const famille = { ...this.state.famille}
+  famille[id].nom = 'X'
+  this.setState({ famille })
   }
 
   render () {
@@ -64,7 +70,7 @@ class App extends Component {
 
     const liste = Object.keys(famille)
       .map(membre =>(
-      <Membre age={famille[membre].age} nom={famille[membre].nom} />
+        <Membre key={membre} handleChange={event => this.handleChange(event, membre)} handleChangeAge={event => this.handleChangeAge(event, membre)}  cacherNom={() => this.cacherNom(membre)} age={famille[membre].age} nom={famille[membre].nom} />
     ))
       console.log(liste)
 
@@ -73,8 +79,7 @@ class App extends Component {
         <div className= 'App'>
           <h1>{titre}</h1>
           <h5>{test}</h5>
-          <input value={famille.membre1.nom} onChange={this.handleChange} type="text" />
-          <input value={famille.membre1.age} onChange={this.handleChangeAge} type="text" />
+
           { liste }
           <Membre age={famille.membre3.age} nom={famille.membre3.nom}>
             {description}
